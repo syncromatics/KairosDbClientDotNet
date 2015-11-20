@@ -1,0 +1,20 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "KairosDbClient Class Library",
+  "authors": [ "eric" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "Newtonsoft.Json": "7.0.1"
+  },
+
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Net.Http": "4.0.0.0"
+      }
+    }
+  }
+}
