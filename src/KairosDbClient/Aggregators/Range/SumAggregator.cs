@@ -1,6 +1,4 @@
-﻿using KairosDbClient.Aggregators.Range;
-
-namespace KairosDbClient.Aggregators
+﻿namespace KairosDbClient.Aggregators.Range
 {
     public class SumAggregator : RangeAggregator
     {

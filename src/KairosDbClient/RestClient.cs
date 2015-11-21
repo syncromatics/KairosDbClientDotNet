@@ -10,12 +10,13 @@ using Newtonsoft.Json.Serialization;
 
 namespace KairosDbClient
 {
-    public class RestClient
+    public class RestClient : IKairosClient
     {
         private readonly string _baseUrl;
 
         private readonly JsonSerializerSettings _settings = new JsonSerializerSettings
         {
+            //everything is good as long as the property name doesn't have more than two words
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Formatting = Formatting.Indented,
             NullValueHandling = NullValueHandling.Ignore

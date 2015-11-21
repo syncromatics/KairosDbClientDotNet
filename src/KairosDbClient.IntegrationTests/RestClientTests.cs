@@ -12,6 +12,13 @@ namespace KairosDbClient.IntegrationTests
 {
     public class RestClientTests
     {
+        private readonly RestClient _client;
+
+        public RestClientTests()
+        {
+            _client = new RestClient("http://localhost:8083");
+        }
+        
         [Fact]
         public async void RestClient_posts_metrics()
         {
@@ -23,9 +30,7 @@ namespace KairosDbClient.IntegrationTests
                 .AddTag("route_id", "1")
                 .AddDataPoint(dataPoint);
 
-            var client = new RestClient("http://localhost:8083");
-
-            await client.AddMetricsAsync(new[] {metric});
+            await _client.AddMetricsAsync(new[] {metric});
 
             var query = new QueryBuilder()
                 .SetStart(TimeSpan.FromSeconds(5))
@@ -33,12 +38,12 @@ namespace KairosDbClient.IntegrationTests
 
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            var response = await client.QueryMetricsAsync(query);
+            var response = await _client.QueryMetricsAsync(query);
 
             response.Queries.Should().HaveCount(1);
             response.Queries[0].SampleSize.Should().Be(1);
             response.Queries[0].Results.Should().HaveCount(1);
-            response.Queries[0].Results[0].DataPoints.First().ShouldBeEquivalentTo(dataPoint);
+            response.Queries[0].Results[0].DataPoints.Single().ShouldBeEquivalentTo(dataPoint);
         }
 
         [Fact]
@@ -52,9 +57,7 @@ namespace KairosDbClient.IntegrationTests
                 .AddTag("route_id", "1")
                 .AddDataPoint(dataPoint);
 
-            var client = new RestClient("http://localhost:8083");
-
-            await client.AddMetricsAsync(new[] { metric });
+            await _client.AddMetricsAsync(new[] { metric });
 
             var queryMetric = new QueryMetric(metricName)
                 .AddAggregator(new AverageAggregator(1, TimeUnit.Minutes));
@@ -65,9 +68,11 @@ namespace KairosDbClient.IntegrationTests
 
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            var response = await client.QueryMetricsAsync(query);
-            Assert.Equal(1, response.Queries[0].Results.Count);
-            Assert.Equal(5L, response.Queries[0].Results[0].DataPoints.First().Value);
+            var response = await _client.QueryMetricsAsync(query);
+
+            response.Queries.Should().HaveCount(1);
+            response.Queries[0].Results.Should().HaveCount(1);
+            response.Queries[0].Results[0].DataPoints.Single().Should().Be(5L);
         }
 
         [Fact]
@@ -87,9 +92,7 @@ namespace KairosDbClient.IntegrationTests
                 .AddTag("route_id", "2")
                 .AddDataPoint(dataPoint2);
 
-            var client = new RestClient("http://localhost:8083");
-
-            await client.AddMetricsAsync(new[] {metric, metric2});
+            await _client.AddMetricsAsync(new[] {metric, metric2});
 
             var queryMetric = new QueryMetric(metricName)
                 .AddGroupBy(new GroupByTag("route_id"));
@@ -100,9 +103,17 @@ namespace KairosDbClient.IntegrationTests
 
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            var response = await client.QueryMetricsAsync(query);
-            Assert.Equal(2, response.Queries[0].Results.Count);
-            Assert.Equal(2, response.Queries[0].SampleSize);
+            var response = await _client.QueryMetricsAsync(query);
+
+            response.Queries.Single().SampleSize.Should().Be(2);
+
+            response.Queries.Single().Results
+                .Should()
+                .HaveCount(2)
+                .And
+                .Contain(result => result.DataPoints.Single().LongValue == 10L)
+                .And
+                .Contain(result => result.DataPoints.Single().LongValue == 5L);
         }
 
         private string GetUniqueMetricName()
