@@ -4,9 +4,9 @@ using System.Threading;
 using FluentAssertions;
 using KairosDbClient.Aggregators;
 using KairosDbClient.Aggregators.Range;
-using Xunit;
 using KairosDbClient.Extensions;
 using KairosDbClient.Grouping;
+using Xunit;
 
 namespace KairosDbClient.IntegrationTests
 {
@@ -47,7 +47,7 @@ namespace KairosDbClient.IntegrationTests
         }
 
         [Fact]
-        public async void RestClient_uses_sum_aggregator()
+        public async void QueryMetricsAsync_uses_sum_aggregator()
         {
             var metricName = GetUniqueMetricName();
 
@@ -80,7 +80,7 @@ namespace KairosDbClient.IntegrationTests
         }
 
         [Fact]
-        public async void RestClient_uses_avg_aggregator()
+        public async void QueryMetricsAsync_uses_avg_aggregator()
         {
             var metricName = GetUniqueMetricName();
 

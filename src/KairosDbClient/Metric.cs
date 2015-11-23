@@ -10,6 +10,10 @@ namespace KairosDbClient
         public string Name { get; private set; }
         private readonly Dictionary<string, string> _tags = new Dictionary<string, string>();
         private readonly List<DataPoint> _dataPoints = new List<DataPoint>();
+        /// <summary>
+        /// The type name as registered on the server if this is a custom type
+        /// </summary>
+        public string Type { get; private set; }
 
         [JsonIgnore]
         public IReadOnlyList<DataPoint> DataPoints => _dataPoints;
@@ -52,6 +56,12 @@ namespace KairosDbClient
         public Metric AddDataPoints(IEnumerable<DataPoint> dataPoints)
         {
             _dataPoints.AddRange(dataPoints);
+            return this;
+        }
+
+        public Metric SetType(string type)
+        {
+            Type = type;
             return this;
         }
     }
