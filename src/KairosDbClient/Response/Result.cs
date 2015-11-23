@@ -10,6 +10,5 @@ namespace KairosDbClient.Response
         public List<List<object>> Values { get; set; }
 
         public IEnumerable<DataPoint> DataPoints => Values.Select(value => new DataPoint((long)value[0], value[1]));
-
     }
 }

@@ -34,7 +34,10 @@ namespace KairosDbClient
                 client.BaseAddress = new Uri(_baseUrl);
                 var serialized = JsonConvert.SerializeObject(metrics, _settings);
                 var response = await client.PostAsync("/api/v1/datapoints", new StringContent(serialized));
-                await ThrowOnError(response);
+                if (!response.IsSuccessStatusCode)
+                {
+                    await ThrowOnError(response);
+                }
             }
         }
 
@@ -45,7 +48,10 @@ namespace KairosDbClient
                 client.BaseAddress = new Uri(_baseUrl);
                 var serialized = JsonConvert.SerializeObject(query, _settings);
                 var response = await client.PostAsync("/api/v1/datapoints/query", new StringContent(serialized));
-                await ThrowOnError(response);
+                if (!response.IsSuccessStatusCode)
+                {
+                    await ThrowOnError(response);
+                }
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<QueryResponse>(content);
             }
@@ -53,10 +59,6 @@ namespace KairosDbClient
 
         private async Task ThrowOnError(HttpResponseMessage response)
         {
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 var content = await response.Content.ReadAsStringAsync();

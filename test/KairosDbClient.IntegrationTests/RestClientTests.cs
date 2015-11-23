@@ -16,7 +16,7 @@ namespace KairosDbClient.IntegrationTests
 
         public RestClientTests()
         {
-            _client = new RestClient("http://localhost:8083");
+            _client = new RestClient("http://172.16.132.136:8083/");
         }
         
         [Fact]
@@ -47,23 +47,27 @@ namespace KairosDbClient.IntegrationTests
         }
 
         [Fact]
-        public async void RestClient_uses_aggregators()
+        public async void RestClient_uses_sum_aggregator()
         {
             var metricName = GetUniqueMetricName();
 
-            var dataPoint = new DataPoint(DateTime.UtcNow.MillisecondsSinceEpoch(), 5L);
+            var time = DateTime.UtcNow.MillisecondsSinceEpoch();
+
+            var dataPoint = new DataPoint(time, 10L);
+            var dataPoint2 = new DataPoint(time + 1, 30L);
 
             var metric = new Metric(metricName)
                 .AddTag("route_id", "1")
+                .AddDataPoint(dataPoint2)
                 .AddDataPoint(dataPoint);
 
             await _client.AddMetricsAsync(new[] { metric });
 
             var queryMetric = new QueryMetric(metricName)
-                .AddAggregator(new AverageAggregator(1, TimeUnit.Minutes));
+                .AddAggregator(new SumAggregator(1, TimeUnit.Minutes));
 
             var query = new QueryBuilder()
-                .SetStart(TimeSpan.FromSeconds(5))
+                .SetStart(TimeSpan.FromSeconds(10))
                 .AddQueryMetric(queryMetric);
 
             Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -72,11 +76,44 @@ namespace KairosDbClient.IntegrationTests
 
             response.Queries.Should().HaveCount(1);
             response.Queries[0].Results.Should().HaveCount(1);
-            response.Queries[0].Results[0].DataPoints.Single().Should().Be(5L);
+            response.Queries[0].Results[0].DataPoints.Single().Value.Should().Be(40L);
         }
 
         [Fact]
-        public async void QueryMetricsAsync_uses_group_by()
+        public async void RestClient_uses_avg_aggregator()
+        {
+            var metricName = GetUniqueMetricName();
+
+            var time = DateTime.UtcNow.MillisecondsSinceEpoch();
+
+            var dataPoint = new DataPoint(time, 10L);
+            var dataPoint2 = new DataPoint(time + 1, 30L);
+
+            var metric = new Metric(metricName)
+                .AddTag("route_id", "1")
+                .AddDataPoint(dataPoint2)
+                .AddDataPoint(dataPoint);
+
+            await _client.AddMetricsAsync(new[] { metric });
+
+            var queryMetric = new QueryMetric(metricName)
+                .AddAggregator(new AverageAggregator(1, TimeUnit.Minutes));
+
+            var query = new QueryBuilder()
+                .SetStart(TimeSpan.FromSeconds(10))
+                .AddQueryMetric(queryMetric);
+
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+
+            var response = await _client.QueryMetricsAsync(query);
+
+            response.Queries.Should().HaveCount(1);
+            response.Queries[0].Results.Should().HaveCount(1);
+            response.Queries[0].Results[0].DataPoints.Single().Value.Should().Be(20L);
+        }
+
+        [Fact]
+        public async void QueryMetricsAsync_uses_group_by_tag()
         {
             var metricName = GetUniqueMetricName();
 
