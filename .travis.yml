@@ -2,6 +2,9 @@ sudo: required
 
 services:
   - docker
+  
+env:
+  - DNX_BUILD_VERSION=$TRAVIS_BUILD_NUMBER
 
 language: csharp
 mono:
