@@ -4,7 +4,7 @@ services:
   - docker
   
 env:
-  - DNX_BUILD_VERSION='beta' + $TRAVIS_BUILD_NUMBER
+  - DNX_BUILD_VERSION="beta$TRAVIS_BUILD_NUMBER"
 
 language: csharp
 mono:
