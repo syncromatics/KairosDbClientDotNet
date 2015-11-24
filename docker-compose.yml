@@ -1,0 +1,21 @@
+dev-cass-1:
+  image: abh1nav/cassandra
+  environment:
+    - OPS_IP=dev-ops-1
+
+dev-ops-1:
+  image: abh1nav/opscenter
+  ports:
+    - "8888:8888"
+  links:
+    - dev-cass-1
+
+dev-kairos-1:
+  image: wangdrew/kairosdb
+  ports:
+    - "8083:8083"
+    - "4242:4242"
+  links:
+    - dev-cass-1
+  environment:
+    - CASSANDRA_HOST_LIST=dev-cass-1:9160

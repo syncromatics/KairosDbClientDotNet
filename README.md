@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/syncromatics/KairosDbClientDotNet.svg)](https://travis-ci.org/syncromatics/KairosDbClientDotNet)
+
 # KairosDbClientDotNet
 
 A dotnet kairosdb client.

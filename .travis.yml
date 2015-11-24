@@ -1,0 +1,18 @@
+sudo: required
+
+services:
+  - docker
+
+language: csharp
+mono:
+  - latest
+
+before_install:
+  - curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh && source ~/.dnx/dnvm/dnvm.sh
+  - dnvm upgrade
+  - dnx --version
+
+script:
+  - docker-compose up -d
+  - dnu restore
+  - dnx --project test/KairosDbClient.IntegrationTests/project.json test
