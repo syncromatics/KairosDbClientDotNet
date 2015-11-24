@@ -16,3 +16,5 @@ script:
   - docker-compose up -d
   - dnu restore
   - dnx --project test/KairosDbClient.IntegrationTests/project.json test
+  - dnu pack src/KairosDbClient/
+  - nuget push src/KairosDbClient/bin/Debug/*.nupkg $ApiKey
