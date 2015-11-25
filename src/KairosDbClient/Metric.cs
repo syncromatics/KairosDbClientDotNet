@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 
 namespace KairosDbClient
 {
+    /// <summary>
+    /// a metric with a name, tags, and datapoints for pushing data into kairosdb
+    /// </summary>
     public class Metric
     {
         public string Name { get; private set; }

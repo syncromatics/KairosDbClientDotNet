@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace KairosDbClient
 {
+    /// <summary>
+    /// A relative time with a value and unit (e.g. seconds, years, etc)
+    /// </summary>
     public class RelativeTime
     {
         public long Value { get; set; }

@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace KairosDbClient.Response
 {
+    /// <summary>
+    /// The metric name, tags, and datapoints resulting from a query
+    /// </summary>
     public class Result
     {
         public string Name { get; set; }

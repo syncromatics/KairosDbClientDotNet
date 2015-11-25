@@ -6,6 +6,11 @@ using Newtonsoft.Json;
 
 namespace KairosDbClient
 {
+    /// <summary>
+    /// Use to query 1 or more metrics for a time range. 
+    /// A start time is required, either absolute or relative.
+    /// End time is optional and defaults to now
+    /// </summary>
     public class QueryBuilder
     {
         [JsonIgnore]
@@ -32,6 +37,11 @@ namespace KairosDbClient
 
         public IReadOnlyList<QueryMetric> Metrics => _queryMetrics;  
 
+        /// <summary>
+        /// This will be passed to kairosdb as a relative milliseconds value
+        /// </summary>
+        /// <param name="start"></param>
+        /// <returns></returns>
         public QueryBuilder SetStart(TimeSpan start)
         {
             if (AbsoluteStart.HasValue)
@@ -42,6 +52,11 @@ namespace KairosDbClient
             return this;
         }
 
+        /// <summary>
+        /// This will be passed to kairosdb as a relative milliseconds value
+        /// </summary>
+        /// <param name="end"></param>
+        /// <returns></returns>
         public QueryBuilder SetEnd(TimeSpan end)
         {
             if (AbsoluteEnd.HasValue)
@@ -52,6 +67,11 @@ namespace KairosDbClient
             return this;
         }
 
+        /// <summary>
+        /// This will be passed to kairosdb as an absolute time
+        /// </summary>
+        /// <param name="start"></param>
+        /// <returns></returns>
         public QueryBuilder SetStart(DateTimeOffset start)
         {
             if (StartRelative != null)
@@ -62,6 +82,11 @@ namespace KairosDbClient
             return this;
         }
 
+        /// <summary>
+        /// This will be passed to kairosdb as an absolute time
+        /// </summary>
+        /// <param name="end"></param>
+        /// <returns></returns>
         public QueryBuilder SetEnd(DateTimeOffset end)
         {
             if (StartRelative != null)
@@ -72,6 +97,11 @@ namespace KairosDbClient
             return this;
         }
 
+        /// <summary>
+        /// This will be passed to kairosdb as a relative time with the unit specified
+        /// </summary>
+        /// <param name="start"></param>
+        /// <returns></returns>
         public QueryBuilder SetStart(RelativeTime start)
         {
             if (AbsoluteStart.HasValue)
@@ -82,6 +112,11 @@ namespace KairosDbClient
             return this;
         }
 
+        /// <summary>
+        /// This will be passed to kairosdb as a relative time with the unit specified
+        /// </summary>
+        /// <param name="end"></param>
+        /// <returns></returns>
         public QueryBuilder SetEnd(RelativeTime end)
         {
             if (AbsoluteEnd.HasValue)
@@ -104,6 +139,11 @@ namespace KairosDbClient
             return this;
         }
 
+        /// <summary>
+        /// Add a metric to query for
+        /// </summary>
+        /// <param name="metric"></param>
+        /// <returns></returns>
         public QueryBuilder AddQueryMetric(QueryMetric metric)
         {
             _queryMetrics.Add(metric);

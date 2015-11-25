@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 
 namespace KairosDbClient
 {
+    /// <summary>
+    /// Use to query a metric by name, optionally including group bys or aggregators
+    /// </summary>
     public class QueryMetric
     {
         public string Name { get; set; }
