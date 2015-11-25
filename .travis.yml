@@ -20,4 +20,5 @@ script:
   - dnu restore
   - dnx --project test/KairosDbClient.IntegrationTests/project.json test
   - dnu pack src/KairosDbClient/
+  - rm -f src/KairosDbClient/bin/Debug/*.symbols.nupkg
   - "if [[ $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_BRANCH == 'master' ]]; then nuget push src/KairosDbClient/bin/Debug/*.nupkg -ApiKey $API_KEY; fi"
