@@ -1,5 +1,5 @@
 ﻿{
-  "version": "0.1.1-*",
+  "version": "0.1.2-*",
   "description": "A client for adding and querying metrics from kairosdb",
   "authors": [ "syncromatics" ],
   "tags": [ "kairosdb" ],
