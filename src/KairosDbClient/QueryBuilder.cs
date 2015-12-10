@@ -25,10 +25,10 @@ namespace KairosDbClient
         private readonly List<QueryMetric> _queryMetrics = new List<QueryMetric>();
 
         [JsonProperty("start_absolute")]
-        public long? StartAbsolute => AbsoluteStart?.DateTime.MillisecondsSinceEpoch();
+        public long? StartAbsolute => AbsoluteStart?.UtcDateTime.MillisecondsSinceEpoch();
 
         [JsonProperty("end_absolute")]
-        public long? EndAbsolute => AbsoluteStart?.DateTime.MillisecondsSinceEpoch();
+        public long? EndAbsolute => AbsoluteEnd?.UtcDateTime.MillisecondsSinceEpoch();
 
         [JsonProperty("start_relative")]
         public RelativeTime StartRelative { get; private set; }

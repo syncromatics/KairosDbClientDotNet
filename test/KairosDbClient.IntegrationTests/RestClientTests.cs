@@ -153,6 +153,38 @@ namespace KairosDbClient.IntegrationTests
                 .Contain(result => result.DataPoints.Single().LongValue == 5L);
         }
 
+        [Fact]
+        public async void RestClient_queries_by_absolute_start_and_end()
+        {
+            var metricName = GetUniqueMetricName();
+
+            var start = DateTime.UtcNow.AddHours(-3);
+
+            var dataPoint = new DataPoint(start.MillisecondsSinceEpoch(), 5L);
+            var dataPoint2 = new DataPoint(start.AddHours(2).MillisecondsSinceEpoch(), 10L);
+
+            var metric = new Metric(metricName)
+                .AddTag("route_id", "1")
+                .AddDataPoint(dataPoint)
+                .AddDataPoint(dataPoint2);
+
+            await _client.AddMetricsAsync(new[] { metric });
+
+            var query = new QueryBuilder()
+                .SetStart(start.AddSeconds(-10))
+                .SetEnd(start.AddHours(1))
+                .AddQueryMetric(new QueryMetric(metricName));
+
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+
+            var response = await _client.QueryMetricsAsync(query);
+
+            response.Queries.Should().HaveCount(1);
+            response.Queries[0].SampleSize.Should().Be(1);
+            response.Queries[0].Results.Should().HaveCount(1);
+            response.Queries[0].Results[0].DataPoints.Single().ShouldBeEquivalentTo(dataPoint);
+        }
+
         private string GetUniqueMetricName()
         {
             return Guid.NewGuid().ToString();
