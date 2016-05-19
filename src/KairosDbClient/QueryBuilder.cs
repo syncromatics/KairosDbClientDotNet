@@ -18,6 +18,17 @@ namespace KairosDbClient
         [JsonIgnore]
         public DateTimeOffset? AbsoluteEnd { get; private set; }
         [JsonProperty("cache_time")]
+        private double CacheTimeSeconds {
+            get
+            {
+                if (!CacheTime.HasValue)
+                    return 0;
+                return CacheTime.Value.TotalSeconds;
+
+            }
+            set { CacheTime = TimeSpan.FromSeconds(value); }
+        }
+        [JsonIgnore]
         public TimeSpan? CacheTime { get; private set; }
         [JsonProperty("time_zone")]
         public string TimeZone { get; private set; }
