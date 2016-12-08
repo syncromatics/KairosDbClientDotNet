@@ -16,7 +16,7 @@ namespace KairosDbClient.IntegrationTests
 
         public RestClientTests()
         {
-            _client = new RestClient("http://localhost:8083/");
+            _client = new RestClient("http://localhost:8083");
         }
         
         [Fact]

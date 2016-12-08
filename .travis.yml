@@ -1,24 +1,19 @@
+language: csharp
+
+os: linux # Ubuntu 14.04
+dist: trusty
 sudo: required
+dotnet: 2.0.0
 
 services:
   - docker
   
-env:
-  - DNX_BUILD_VERSION="beta$TRAVIS_BUILD_NUMBER"
-
-language: csharp
-mono:
-  - latest
-
-before_install:
-  - curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh && source ~/.dnx/dnvm/dnvm.sh
-  - dnvm upgrade
-  - dnx --version
-
 script:
   - docker-compose up -d
-  - dnu restore
-  - dnx --project test/KairosDbClient.IntegrationTests/project.json test
-  - dnu pack src/KairosDbClient/
-  - rm -f src/KairosDbClient/bin/Debug/*.symbols.nupkg
-  - "if [[ $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_BRANCH == 'master' ]]; then nuget push src/KairosDbClient/bin/Debug/*.nupkg -ApiKey $API_KEY; fi"
+  - dotnet restore
+  - dotnet build
+  - dotnet test test/KairosDbClient.IntegrationTests
+  - "if [[ $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_TAG ]]; then
+    dotnet pack src/KairosDbClient --configuration Release /p:Version=$TRAVIS_TAG;
+    nuget push src/KairosDbClient/bin/Release/*.nupkg -ApiKey $NUGET_API_KEY;
+    fi"
