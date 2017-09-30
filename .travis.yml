@@ -10,6 +10,7 @@ services:
   
 script:
   - docker-compose up -d
+  - docker-compose up -d
   - dotnet restore
   - dotnet build
   - dotnet test test/KairosDbClient.IntegrationTests
