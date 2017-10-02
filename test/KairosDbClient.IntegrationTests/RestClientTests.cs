@@ -16,7 +16,7 @@ namespace KairosDbClient.IntegrationTests
 
         public RestClientTests()
         {
-            _client = new RestClient(Environment.GetEnvironmentVariable("kairos_url") ?? "http://localhost:8083");
+            _client = new RestClient($"http://{Environment.GetEnvironmentVariable("kairos_ip") ?? "localhost"}:8083");
         }
         
         [Fact]
