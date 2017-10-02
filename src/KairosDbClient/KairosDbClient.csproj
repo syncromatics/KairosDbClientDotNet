@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>A client for adding and querying metrics from kairosdb</Description>
+    <VersionPrefix>0.2.0</VersionPrefix>
+    <Authors>syncromatics</Authors>
+    <TargetFrameworks>netstandard1.1</TargetFrameworks>
+    <AssemblyName>KairosDbClient</AssemblyName>
+    <PackageId>KairosDbClient</PackageId>
+    <PackageTags>kairosdb</PackageTags>
+    <PackageProjectUrl>https://github.com/syncromatics/KairosDbClientDotNet</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/syncromatics/KairosDbClientDotNet/master/LICENSE</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <PackageReference Include="System.Net.Http" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>
