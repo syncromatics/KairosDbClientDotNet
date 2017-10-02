@@ -11,6 +11,7 @@ services:
 script:
   - docker-compose up -d
   - docker-compose up -d
+  - export kairos_url=$(docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" kairosdbclientdotnet_dev-kairos-1_1)
   - dotnet restore
   - dotnet build
   - dotnet test test/KairosDbClient.IntegrationTests
